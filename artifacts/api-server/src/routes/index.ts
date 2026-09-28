@@ -1,0 +1,40 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health.js";
+import authRouter from "./auth.js";
+import companiesRouter from "./companies.js";
+import departmentsRouter from "./departments.js";
+import coursesRouter from "./courses.js";
+import usersRouter from "./users.js";
+import examsRouter from "./exams.js";
+import resultsRouter from "./results.js";
+import analyticsRouter from "./analytics.js";
+import candidatesRouter from "./candidates.js";
+import aiRouter from "./ai.js";
+import publicRouter from "./public.js";
+import monitorRouter from "./monitor.js";
+import paulinaRouter from "./paulina.js";
+import localAiRouter from "./local-ai.js";
+import groqRouter from "./groq.js";
+import aiProviderRouter from "./ai-provider.js";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use("/auth", authRouter);
+router.use("/companies", companiesRouter);
+router.use("/departments", departmentsRouter);
+router.use("/courses", coursesRouter);
+router.use("/users", usersRouter);
+router.use("/exams", examsRouter);
+router.use("/results", resultsRouter);
+router.use("/analytics", analyticsRouter);
+router.use("/candidates", candidatesRouter);
+router.use("/ai", aiRouter);
+router.use("/public", publicRouter);
+router.use("/monitor", monitorRouter);
+router.use("/paulina", paulinaRouter);
+router.use("/local-ai", localAiRouter);
+router.use("/groq", groqRouter);
+router.use("/ai-config", aiProviderRouter);
+
+export default router;
