@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "zuqZ_7Pz46-_N4XnDW0QL"
+uri = "file://CBT-Bulldozer-APK.tar.gz"
+type = "unspecified"
+title = "CBT Bulldozer APK (extract to get .apk file)"
