@@ -1,0 +1,1632 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: CBT Platform API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+  - name: auth
+  - name: companies
+  - name: departments
+  - name: courses
+  - name: users
+  - name: exams
+  - name: results
+  - name: candidates
+  - name: ai
+  - name: public
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/candidate-login:
+    post:
+      operationId: candidateLogin
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CandidateLoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /companies:
+    get:
+      operationId: listCompanies
+      tags: [companies]
+      responses:
+        "200":
+          description: List of companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Company"
+    post:
+      operationId: createCompany
+      tags: [companies]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCompanyRequest"
+      responses:
+        "201":
+          description: Company created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+
+  /companies/{id}:
+    get:
+      operationId: getCompany
+      tags: [companies]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Company
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+    put:
+      operationId: updateCompany
+      tags: [companies]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCompanyRequest"
+      responses:
+        "200":
+          description: Company updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+    delete:
+      operationId: deleteCompany
+      tags: [companies]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /departments:
+    get:
+      operationId: listDepartments
+      tags: [departments]
+      parameters:
+        - name: companyId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of departments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Department"
+    post:
+      operationId: createDepartment
+      tags: [departments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDepartmentRequest"
+      responses:
+        "201":
+          description: Department created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+
+  /departments/{id}:
+    get:
+      operationId: getDepartment
+      tags: [departments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Department
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+    put:
+      operationId: updateDepartment
+      tags: [departments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDepartmentRequest"
+      responses:
+        "200":
+          description: Department updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+    delete:
+      operationId: deleteDepartment
+      tags: [departments]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      parameters:
+        - name: departmentId
+          in: query
+          schema:
+            type: integer
+        - name: companyId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+    post:
+      operationId: createCourse
+      tags: [courses]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCourseRequest"
+      responses:
+        "201":
+          description: Course created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /courses/{id}:
+    get:
+      operationId: getCourse
+      tags: [courses]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+    put:
+      operationId: updateCourse
+      tags: [courses]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCourseRequest"
+      responses:
+        "200":
+          description: Course updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+    delete:
+      operationId: deleteCourse
+      tags: [courses]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      operationId: updateUser
+      tags: [users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /exams:
+    get:
+      operationId: listExams
+      tags: [exams]
+      responses:
+        "200":
+          description: List of exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+    post:
+      operationId: createExam
+      tags: [exams]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateExamRequest"
+      responses:
+        "201":
+          description: Exam created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exam"
+
+  /exams/{id}:
+    get:
+      operationId: getExam
+      tags: [exams]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Exam with questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExamWithQuestions"
+    put:
+      operationId: updateExam
+      tags: [exams]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateExamRequest"
+      responses:
+        "200":
+          description: Exam updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exam"
+    delete:
+      operationId: deleteExam
+      tags: [exams]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /exams/{id}/submit:
+    post:
+      operationId: submitExam
+      tags: [exams]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitExamRequest"
+      responses:
+        "200":
+          description: Exam result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Result"
+
+  /results:
+    get:
+      operationId: listResults
+      tags: [results]
+      responses:
+        "200":
+          description: List of results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResultWithDetails"
+
+  /results/my:
+    get:
+      operationId: listMyResults
+      tags: [results]
+      responses:
+        "200":
+          description: My results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResultWithDetails"
+
+  /results/broadsheet:
+    get:
+      operationId: getBroadsheet
+      tags: [results]
+      parameters:
+        - name: examId
+          in: query
+          schema:
+            type: integer
+        - name: departmentId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Broadsheet results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Broadsheet"
+
+  /results/{id}:
+    get:
+      operationId: getResult
+      tags: [results]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultWithDetails"
+
+  /analytics/company:
+    get:
+      operationId: getCompanyAnalytics
+      tags: [results]
+      responses:
+        "200":
+          description: Analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyAnalytics"
+
+  /candidates:
+    get:
+      operationId: listCandidates
+      tags: [candidates]
+      responses:
+        "200":
+          description: List of candidates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Candidate"
+    post:
+      operationId: createCandidate
+      tags: [candidates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCandidateRequest"
+      responses:
+        "201":
+          description: Candidate created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Candidate"
+
+  /candidates/my-exams:
+    get:
+      operationId: getCandidateMyExams
+      tags: [candidates]
+      responses:
+        "200":
+          description: Assigned exams for logged-in candidate
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+
+  /candidates/{id}:
+    get:
+      operationId: getCandidate
+      tags: [candidates]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Candidate with assigned exams
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CandidateWithExams"
+    put:
+      operationId: updateCandidate
+      tags: [candidates]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCandidateRequest"
+      responses:
+        "200":
+          description: Candidate updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Candidate"
+    delete:
+      operationId: deleteCandidate
+      tags: [candidates]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /candidates/{id}/assign-exams:
+    post:
+      operationId: assignExamsToCandidate
+      tags: [candidates]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignExamsRequest"
+      responses:
+        "200":
+          description: Exams assigned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /ai/generate-questions:
+    post:
+      operationId: generateQuestions
+      tags: [ai]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateQuestionsRequest"
+      responses:
+        "200":
+          description: Generated questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateQuestionsResponse"
+
+  /ai/set-course-questions:
+    post:
+      operationId: setCourseQuestions
+      tags: [ai]
+      summary: AI generate and save exam questions for a course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetCourseQuestionsRequest"
+      responses:
+        "200":
+          description: Exam created/updated with AI questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetCourseQuestionsResponse"
+
+  /public/org/{companySlug}/{deptSlug}:
+    get:
+      operationId: getPublicDepartmentInfo
+      tags: [public]
+      parameters:
+        - name: companySlug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deptSlug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Department info with courses and exams
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicDepartmentInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /public/org/{companySlug}/{deptSlug}/{courseCode}:
+    get:
+      operationId: getPublicExamInfo
+      tags: [public]
+      parameters:
+        - name: companySlug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deptSlug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: courseCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Public exam info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicExamInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+
+    CandidateLoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required: [username, password]
+
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required: [user, token]
+
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+          enum: [Educational, Utilities, Corporate]
+        logoUrl:
+          type: string
+          nullable: true
+        primaryColor:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, name, isActive, createdAt, updatedAt]
+
+    CreateCompanyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+          enum: [Educational, Utilities, Corporate]
+        logoUrl:
+          type: string
+          nullable: true
+        primaryColor:
+          type: string
+          nullable: true
+        adminEmail:
+          type: string
+        adminPassword:
+          type: string
+        adminName:
+          type: string
+      required: [name, adminEmail, adminPassword, adminName]
+
+    UpdateCompanyRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+          enum: [Educational, Utilities, Corporate]
+        logoUrl:
+          type: string
+          nullable: true
+        primaryColor:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        companyId:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, name, slug, companyId, createdAt]
+
+    CreateDepartmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        companyId:
+          type: integer
+          nullable: true
+      required: [name]
+
+    UpdateDepartmentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        code:
+          type: string
+        semester:
+          type: string
+          nullable: true
+        departmentId:
+          type: integer
+        companyId:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, title, code, departmentId, companyId, createdAt]
+
+    CreateCourseRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        code:
+          type: string
+        semester:
+          type: string
+          nullable: true
+        departmentId:
+          type: integer
+        companyId:
+          type: integer
+          nullable: true
+      required: [title, code, departmentId]
+
+    UpdateCourseRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        code:
+          type: string
+        semester:
+          type: string
+          nullable: true
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          nullable: true
+        name:
+          type: string
+        role:
+          type: string
+          enum: [SuperAdmin, CompanyAdmin, Staff, Candidate]
+        companyId:
+          type: integer
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, name, role, isActive, createdAt]
+
+    CreateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [CompanyAdmin, Staff]
+        companyId:
+          type: integer
+          nullable: true
+      required: [email, password, name, role]
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [CompanyAdmin, Staff]
+        isActive:
+          type: boolean
+        password:
+          type: string
+
+    Candidate:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        companyId:
+          type: integer
+        departmentId:
+          type: integer
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, fullName, username, password, companyId, isActive, createdAt]
+
+    CandidateWithExams:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        companyId:
+          type: integer
+        departmentId:
+          type: integer
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+        assignedExams:
+          type: array
+          items:
+            $ref: "#/components/schemas/Exam"
+      required: [id, fullName, username, password, companyId, isActive, createdAt, assignedExams]
+
+    CreateCandidateRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        companyId:
+          type: integer
+          nullable: true
+        departmentId:
+          type: integer
+          nullable: true
+      required: [fullName, username, password]
+
+    UpdateCandidateRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        departmentId:
+          type: integer
+          nullable: true
+        isActive:
+          type: boolean
+
+    AssignExamsRequest:
+      type: object
+      properties:
+        examIds:
+          type: array
+          items:
+            type: integer
+      required: [examIds]
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+        explanation:
+          type: string
+          nullable: true
+        order:
+          type: integer
+      required: [id, text, options, correctIndex, order]
+
+    QuestionInput:
+      type: object
+      properties:
+        text:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+        explanation:
+          type: string
+          nullable: true
+        order:
+          type: integer
+      required: [text, options, correctIndex, order]
+
+    Exam:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        durationMinutes:
+          type: integer
+        isActive:
+          type: boolean
+        isAiGenerated:
+          type: boolean
+        companyId:
+          type: integer
+        courseId:
+          type: integer
+          nullable: true
+        questionCount:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, title, durationMinutes, isActive, isAiGenerated, companyId, questionCount, createdAt, updatedAt]
+
+    ExamWithQuestions:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        durationMinutes:
+          type: integer
+        isActive:
+          type: boolean
+        isAiGenerated:
+          type: boolean
+        companyId:
+          type: integer
+        courseId:
+          type: integer
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, title, durationMinutes, isActive, isAiGenerated, companyId, questions, createdAt, updatedAt]
+
+    CreateExamRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        durationMinutes:
+          type: integer
+        isActive:
+          type: boolean
+        isAiGenerated:
+          type: boolean
+        courseId:
+          type: integer
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionInput"
+      required: [title, durationMinutes, questions]
+
+    UpdateExamRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        durationMinutes:
+          type: integer
+        isActive:
+          type: boolean
+        isAiGenerated:
+          type: boolean
+        courseId:
+          type: integer
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionInput"
+
+    SubmitExamRequest:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            type: object
+            properties:
+              questionId:
+                type: integer
+              selectedIndex:
+                type: integer
+            required: [questionId, selectedIndex]
+        timeTakenSeconds:
+          type: integer
+      required: [answers, timeTakenSeconds]
+
+    Result:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+          nullable: true
+        candidateId:
+          type: integer
+          nullable: true
+        examId:
+          type: integer
+        score:
+          type: number
+        totalQuestions:
+          type: integer
+        correctAnswers:
+          type: integer
+        timeTakenSeconds:
+          type: integer
+        companyId:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, examId, score, totalQuestions, correctAnswers, timeTakenSeconds, companyId, createdAt]
+
+    ResultWithDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+          nullable: true
+        candidateId:
+          type: integer
+          nullable: true
+        examId:
+          type: integer
+        score:
+          type: number
+        totalQuestions:
+          type: integer
+        correctAnswers:
+          type: integer
+        timeTakenSeconds:
+          type: integer
+        companyId:
+          type: integer
+        createdAt:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+          nullable: true
+        candidate:
+          $ref: "#/components/schemas/Candidate"
+          nullable: true
+        exam:
+          $ref: "#/components/schemas/Exam"
+      required: [id, examId, score, totalQuestions, correctAnswers, timeTakenSeconds, companyId, createdAt, exam]
+
+    BroadsheetRow:
+      type: object
+      properties:
+        candidateId:
+          type: integer
+        fullName:
+          type: string
+        username:
+          type: string
+        score:
+          type: number
+        correctAnswers:
+          type: integer
+        totalQuestions:
+          type: integer
+        timeTakenSeconds:
+          type: integer
+        createdAt:
+          type: string
+      required: [candidateId, fullName, username, score, correctAnswers, totalQuestions, timeTakenSeconds, createdAt]
+
+    Broadsheet:
+      type: object
+      properties:
+        exam:
+          $ref: "#/components/schemas/Exam"
+        department:
+          $ref: "#/components/schemas/Department"
+          nullable: true
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/BroadsheetRow"
+      required: [exam, rows]
+
+    CompanyAnalytics:
+      type: object
+      properties:
+        totalExams:
+          type: integer
+        totalUsers:
+          type: integer
+        totalResults:
+          type: integer
+        averageScore:
+          type: number
+        examStats:
+          type: array
+          items:
+            type: object
+            properties:
+              examId:
+                type: integer
+              examTitle:
+                type: string
+              attempts:
+                type: integer
+              averageScore:
+                type: number
+              passRate:
+                type: number
+            required: [examId, examTitle, attempts, averageScore, passRate]
+      required: [totalExams, totalUsers, totalResults, averageScore, examStats]
+
+    GenerateQuestionsRequest:
+      type: object
+      properties:
+        topic:
+          type: string
+        difficulty:
+          type: string
+          enum: [Easy, Medium, Hard]
+        count:
+          type: integer
+      required: [topic, difficulty, count]
+
+    GeneratedQuestion:
+      type: object
+      properties:
+        text:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+        explanation:
+          type: string
+          nullable: true
+      required: [text, options, correctIndex]
+
+    GenerateQuestionsResponse:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/GeneratedQuestion"
+      required: [questions]
+
+    PublicExamInfo:
+      type: object
+      properties:
+        company:
+          $ref: "#/components/schemas/Company"
+        department:
+          $ref: "#/components/schemas/Department"
+        course:
+          $ref: "#/components/schemas/Course"
+        exam:
+          $ref: "#/components/schemas/Exam"
+          nullable: true
+      required: [company, department, course]
+
+    PublicDepartmentInfo:
+      type: object
+      properties:
+        company:
+          $ref: "#/components/schemas/Company"
+        department:
+          $ref: "#/components/schemas/Department"
+        courses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              title:
+                type: string
+              code:
+                type: string
+              semester:
+                type: string
+                nullable: true
+              exam:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  durationMinutes:
+                    type: integer
+                  questionCount:
+                    type: integer
+                required: [id, title, durationMinutes, questionCount]
+            required: [id, title, code]
+      required: [company, department, courses]
+
+    SetCourseQuestionsRequest:
+      type: object
+      properties:
+        courseId:
+          type: integer
+        count:
+          type: integer
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        durationMinutes:
+          type: integer
+      required: [courseId, count]
+
+    SetCourseQuestionsResponse:
+      type: object
+      properties:
+        exam:
+          $ref: "#/components/schemas/Exam"
+        questionsGenerated:
+          type: integer
+      required: [exam, questionsGenerated]
