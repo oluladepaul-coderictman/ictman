@@ -1,0 +1,18 @@
+packages:
+  "framer-motion": "For page transitions and modal animations"
+  "recharts": "For analytics charts on the admin dashboard"
+  "date-fns": "For formatting dates easily"
+  "react-hook-form": "For robust form state management"
+  "@hookform/resolvers": "For Zod integration with react-hook-form"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "For merging tailwind classes safely"
+
+images:
+  - path: "artifacts/cbt-platform/public/images/login-bg.png"
+    description: "Abstract, clean corporate geometric shapes in soft blue and white hues, minimalist 3D rendering, soft studio lighting"
+    aspect_ratio: "16:9"
+
+notes:
+  - "The app uses a custom fetch interceptor to inject the JWT token (cbt_token) from localStorage into every request made by the generated hooks."
+  - "Assuming generated @workspace/api-client-react hooks use standard fetch under the hood which can be intercepted via window.fetch override."
+  - "Role-based routing handles access control based on the user's role."
